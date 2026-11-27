@@ -1,0 +1,71 @@
+document.getElementById("formulario")
+.addEventListener("submit", async e => {
+    e.preventDefault();
+
+    const id = document.getElementById("id").value;
+
+    const datos = {
+        nombre: document.getElementById("nombre").value.trim(),
+        categoria: document.getElementById("categoria").value.trim(),
+        precio: Number(document.getElementById("precio").value),
+        stock: Number(document.getElementById("stock").value)
+    };
+
+    const respuesta = await fetch(
+        id ? `${API}/${id}` : API,
+        {
+            method: id ? "PUT" : "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(datos)
+        }
+    );
+
+    if (!respuesta.ok) {
+        alert("No se pudo guardar el producto");
+        return;
+    }
+
+    limpiar();
+    cargarProductos();
+});
+
+function editar(id) {
+    const p = lista.find(x => x._id === id);
+
+    document.getElementById("id").value = p._id;
+    document.getElementById("nombre").value = p.nombre;
+    document.getElementById("categoria").value = p.categoria;
+    document.getElementById("precio").value = p.precio;
+    document.getElementById("stock").value = p.stock;
+
+    document.getElementById("tituloFormulario").textContent =
+        "Actualizar producto";
+}
+
+async function eliminar(id) {
+    if (!confirm("¿Desea eliminar este producto?")) return;
+
+    const respuesta = await fetch(${API}/${id}, {
+        method: "DELETE"
+    });
+
+    if (!respuesta.ok) {
+        alert("No se pudo eliminar");
+        return;
+    }
+
+    cargarProductos();
+}
+
+function limpiar() {
+    document.getElementById("formulario").reset();
+    document.getElementById("id").value = "";
+    document.getElementById("tituloFormulario").textContent =
+        "Registrar producto";
+}
+
+cargarProductos();
+</script>
+
+</body>
+</html>
